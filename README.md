@@ -9,3 +9,5 @@ Ex. for Science, the process is
 science -> scientific method -> empirical evidence -> information -> uncertainty -> epistemology -> philosophy
 
 Program.cs was the initial algorithm. It was implemented into ASP.Net Core website through MVC framework. THe data was then represented through vertical treees using D3.js
+
+As wikipedia can be edited by anyone and is constantly changing, the graph could change daily.
