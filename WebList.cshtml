@@ -1,0 +1,113 @@
+﻿@model WebsiteForWikiToPhil.Models.WebList
+@using System.Web;
+
+@{
+    ViewData["Title"] = "WebList";
+}
+
+<link rel="stylesheet" href="~/css/GraphCSS.css" />
+
+<h1>Lists</h1>
+
+<h4>Lists</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="List" asp-action="WebList" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="firstLink" class="control-label"></label>
+                <input asp-for="firstLink" class="form-control" placeholder="First Link" />
+                <span asp-validation-for="firstLink" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="oldTitles" class="form-control" id="oldString"/>
+                <span asp-validation-for="oldTitles" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Home" asp-action="Index">Back to WebList</a>
+</div>
+
+<div class="graph">
+    @if (Model.Titles != null)
+    {
+        if (Model.answer() == "In a Loop!")
+        {
+            <script src="https://d3js.org/d3.v6.min.js"></script>
+            <script src="~/js/DisplayGraph.js"></script>
+            <script>
+                var newArray = @Json.Serialize(Model.Titles);
+                newArray = newArray.reverse();
+                var newStringData = arrayToString(newArray);
+                var newTree = JSON.parse(newStringData);
+
+                var oldTree = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.oldTitles))");
+
+                displayGraphOnPage(oldTree);
+                displayGraphOnPage(newTree);
+
+            </script>
+        }
+
+        if (Model.answer() == "In a dead end!")
+        {
+            <script src="https://d3js.org/d3.v6.min.js"></script>
+            <script src="~/js/DisplayGraph.js"></script>
+            <script>
+                var newArray = @Json.Serialize(Model.Titles);
+                newArray = newArray.reverse();
+                var newStringData = arrayToString(newArray);
+                var newTree = JSON.parse(newStringData);
+
+                var oldTree = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.oldTitles))");
+
+                displayGraphOnPage(oldTree);
+                displayGraphOnPage(newTree);
+
+            </script>
+        }
+
+        if (Model.answer() == "Found Philosophy!")
+        {
+            <script src="https://d3js.org/d3.v6.min.js"></script>
+            <script src="~/js/DisplayGraph.js"></script>
+            <script>
+                var newArray = @Json.Serialize(Model.Titles);
+                newArray = newArray.reverse();
+                var newStringData = arrayToString(newArray);
+                var realTree = JSON.parse(newStringData);
+
+                var oldStringData = "@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.oldTitles))";
+
+                if (oldStringData != "") {
+                    var oldTree = JSON.parse(oldStringData);
+                    realTree = mergeTrees(oldTree, realTree);
+                }
+
+                displayGraphOnPage(realTree);
+
+                window.onload = function () {
+                    var graph = document.getElementById("oldString");
+                    graph.value = JSON.stringify(realTree);
+                }
+
+            </script>
+
+        }
+
+
+    }
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
